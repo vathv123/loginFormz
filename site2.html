@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Received Data</title>
+  <style>
+    #dataList {
+      margin-top: 20px;
+      font-family: Arial, sans-serif;
+    }
+    button {
+      margin-top: 20px;
+      padding: 5px 10px;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <h2>Data received so far:</h2>
+  <ul id="dataList"></ul>
+
+  <button id="clearBtn">Clear All Data</button>
+
+  <script>
+    const params = new URLSearchParams(window.location.search);
+    const newData = params.get('data');
+
+    // Get stored data array or empty array
+    let storedData = JSON.parse(localStorage.getItem('receivedData')) || [];
+
+    // If there's new data, add it to the array
+    if (newData) {
+      storedData.push(newData);
+      localStorage.setItem('receivedData', JSON.stringify(storedData));
+    }
+
+    const dataList = document.getElementById('dataList');
+
+    // Function to render the data list on page
+    function renderList() {
+      dataList.innerHTML = '';
+      if (storedData.length === 0) {
+        dataList.innerHTML = '<li><i>No data received yet.</i></li>';
+        return;
+      }
+      storedData.forEach((item, index) => {
+        const li = document.createElement('li');
+        li.textContent = item;
+        dataList.appendChild(li);
+      });
+    }
+
+    // Render list on page load
+    renderList();
+
+    // Clear button logic
+    document.getElementById('clearBtn').addEventListener('click', () => {
+      localStorage.removeItem('receivedData');
+      storedData = [];
+      renderList();
+    });
+  </script>
+</body>
+</html>

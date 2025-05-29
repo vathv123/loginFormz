@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Input Page (Silent Send)</title>
+</head>
+<body>
+  <h2>Enter something to send:</h2>
+  <form id="dataForm">
+    <input type="text" name="data" id="dataInput" placeholder="Type here" required />
+    <button type="submit">Send</button>
+  </form>
+
+  <p id="statusMsg" style="color:green;"></p>
+
+  <script>
+    const form = document.getElementById('dataForm');
+    const statusMsg = document.getElementById('statusMsg');
+
+    form.addEventListener('submit', (e) => {
+      e.preventDefault(); // Prevent form default redirect
+
+      const input = document.getElementById('dataInput');
+      const newData = input.value.trim();
+
+      if (newData === '') {
+        statusMsg.textContent = 'Please enter some data!';
+        statusMsg.style.color = 'red';
+        return;
+      }
+
+      // Get stored data array or empty
+      let storedData = JSON.parse(localStorage.getItem('receivedData')) || [];
+
+      // Add new data
+      storedData.push(newData);
+      localStorage.setItem('receivedData', JSON.stringify(storedData));
+
+      statusMsg.textContent = 'Data saved successfully! Open site2.html to view.';
+      statusMsg.style.color = 'green';
+
+      input.value = ''; // Clear input
+    });
+  </script>
+</body>
+</html>
